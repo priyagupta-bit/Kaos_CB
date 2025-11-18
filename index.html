@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KAOS — Sign Up (if you can)</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- <script src="script.js"></script> -->
+  <style>
+    /* ----- Base + Theme (Girlypop pastel + intentional chaos) ----- */
+    :root {
+      --bg1: linear-gradient(135deg, #fff0f6 0%, #fff8f0 50%, #f0fff4 100%);
+      --accent: #ff8ab1;
+      --mint: #bff5d0;
+      --lav: #e9d7ff;
+      --gold: #ffd66b;
+      --char: #374151;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      font-family: "Poppins", system-ui, sans-serif;
+      background: var(--bg1);
+      color: var(--char);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 32px auto;
+      padding: 28px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(24, 24, 24, 0.08);
+      position: relative;
+      overflow: hidden
+    }
+
+    h1 {
+      font-size: 36px;
+      margin: 0 0 8px;
+      letter-spacing: 1px
+    }
+
+    .subtitle {
+      color: #6b7280;
+      margin-bottom: 18px
+    }
+
+    /* glitter / sparkle overlay (subtle jitter) */
+    .glitter {
+      position: absolute;
+      left: -20px;
+      top: -20px;
+      width: 200%;
+      height: 200%;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.6) 1px, transparent 1px);
+      opacity: 0.06;
+      transform: rotate(12deg);
+      pointer-events: none;
+      animation: jitter 6s infinite
+    }
+
+    @keyframes jitter {
+      0% {
+        transform: translate(0, 0) rotate(12deg)
+      }
+
+      50% {
+        transform: translate(6px, -4px) rotate(11deg)
+      }
+
+      100% {
+        transform: translate(0, 0) rotate(12deg)
+      }
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 24px;
+      align-items: start
+    }
+
+    .hero {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.3));
+      padding: 20px;
+      border-radius: 12px;
+      border: 2px dashed rgba(255, 138, 177, 0.25)
+    }
+
+    .hero-ill {
+      height: 220px;
+      background: conic-gradient(from 200deg at 50% 50%, #ffd6e6, #fff0f6, #f0fff4);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #7f1d4f
+    }
+
+    .hero p {
+      margin: 12px 0 0
+    }
+
+    /* Form area */
+    .form-wrap {
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.9), rgba(250, 250, 255, 0.95));
+      padding: 20px;
+      border-radius: 14px;
+      position: relative
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 600
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    select {
+      padding: 12px;
+      border-radius: 10px;
+      border: 2px solid #f3f4f6;
+      outline: none;
+      font-size: 15px;
+      background: rgba(255, 255, 255, 0.6)
+    }
+
+    input:focus,
+    select:focus {
+      box-shadow: 0 4px 18px rgba(99, 102, 241, 0.06);
+      border-color: var(--accent)
+    }
+
+    .row {
+      display: flex;
+      gap: 10px
+    }
+
+    .small {
+      flex: 1
+    }
+
+    .note {
+      font-size: 12px;
+      color: #9ca3af
+    }
+
+    /* intentional extra fonts / chaos */
+    .title-chaos {
+      font-family: "Comic Sans MS", "Brush Script MT", serif;
+      font-size: 28px;
+      color: var(--accent);
+      text-shadow: 1px 1px 0 #fff
+    }
+
+    .title-huge {
+      font-size: 44px;
+      color: #6b1a5a;
+      font-family: "Georgia", serif
+    }
+
+    /* moving submit */
+    #submitBtn {
+      padding: 14px 18px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(90deg, var(--accent), #ffa4c9);
+      font-weight: 700;
+      cursor: pointer;
+      position: relative;
+      transition: transform .12s
+    }
+
+    #submitBtn.catchable {
+      cursor: grab
+    }
+
+    /* tiny terms */
+    .terms {
+      font-size: 0.3px;
+      line-height: 1;
+      color: #111;
+      opacity: 0.9
+    }
+
+    /* tooltips (insulting) */
+    .tooltip {
+      position: relative;
+      display: inline-block
+    }
+
+    .tooltip .tiptext {
+      visibility: hidden;
+      width: 160px;
+      background: #111;
+      color: #fff;
+      text-align: center;
+      border-radius: 8px;
+      padding: 6px 8px;
+      position: absolute;
+      z-index: 10;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity .2s
+    }
+
+    .tooltip:hover .tiptext {
+      visibility: visible;
+      opacity: 1
+    }
+
+    /* confetti */
+    .confetti {
+      position: absolute;
+      inset: 0;
+      pointer-events: none
+    }
+
+    .confetti i {
+      position: absolute;
+      width: 10px;
+      height: 6px;
+      border-radius: 2px;
+      opacity: 0;
+      animation: confetti 3s linear infinite
+    }
+
+    @keyframes confetti {
+      0% {
+        transform: translateY(-50vh) rotate(0);
+        opacity: 1
+      }
+
+      100% {
+        transform: translateY(120vh) rotate(720deg);
+        opacity: 0
+      }
+    }
+
+    /* floating pop-up */
+    .popup {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 12px 14px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      width: 260px
+    }
+
+    .chat-bubble {
+      position: fixed;
+      left: 18px;
+      bottom: 18px;
+      background: #ffeff6;
+      border-radius: 999px;
+      padding: 12px 16px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      font-weight: 700
+    }
+
+    /* small insulting toasts */
+    .toast {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 20px;
+      background: #111;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 8px;
+      opacity: 0;
+      transition: opacity .2s;
+      z-index: 50
+    }
+
+    .toast.show {
+      opacity: 1
+    }
+
+    /* mobile worse */
+    @media (max-width:900px) {
+      .layout {
+        grid-template-columns: 1fr;
+        gap: 8px
+      }
+
+      .hero-ill {
+        height: 160px
+      }
+
+      .container {
+        margin: 8px;
+        padding: 12px
+      }
+    }
+
+    /* intentionally clashing fonts on headings */
+    .clash1 {
+      font-family: 'Courier New', monospace;
+      color: #4b1d3f
+    }
+
+    .clash2 {
+      font-family: 'Impact', 'Arial Black', sans-serif;
+      color: #0f172a
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="glitter"></div>
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px">
+      <div
+        style="width:64px;height:64px;border-radius:14px;background:linear-gradient(90deg,#ffd6e6,#fff0f6);display:flex;align-items:center;justify-content:center;font-weight:800;color:#7a1840">
+        KAOS</div>
+      <div>
+        <div class="title-huge">WELCOME TO KAOS — SIGN UP (IF YOU CAN 😂)</div>
+        <div class="subtitle">Rules are overrated. So is good design.</div>
+      </div>
+    </div>
+
+    <div class="layout">
+      <!-- Left: hero -->
+      <div class="hero">
+        <div class="hero-ill">Where Slay Meets Delay — Please Sign Up (Eventually).<br> We Removed All the Rules — and
+          the Logic.</div>
+        <p class="note">Track: <strong>404: Design Not Found — Make Bad UI/UX</strong></p>
+        <p class="note">Challenge: <strong>Bad Sign-Up Page / Form</strong></p>
+        <div style="margin-top:14px;font-size:14px">
+          <div class="clash1">Girlypop pastel + minimal chaos</div>
+          <div class="clash2">Expect frustration. Bring popcorn.</div>
+        </div>
+      </div>
+
+      <!-- Right: form -->
+      <div class="form-wrap">
+        <form id="kaosForm" autocomplete="off" novalidate>
+          <!-- Name -->
+          <div>
+            <label class="title-chaos">Full Legal Name (no excuses)</label>
+            <input id="name" type="text" placeholder="Enter your full legal name (no excuses)" required />
+            <div class="note tooltip">Why so formal?
+              <span class="tiptext">Starts clearing every 5s. Try to keep up.</span>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label>Email (must be UPPERCASE + 3 emojis)</label>
+            <input id="email" type="email" placeholder="EXAMPLE@EMAIL.COM 😄😄😄" />
+            <div class="note">Validation: uppercase only + at least 3 emojis.</div>
+          </div>
+
+          <!-- Password -->
+          <div class="row">
+            <div class="small">
+              <label>Password</label>
+              <input id="password" type="password" placeholder="Must include emoji, Roman numeral, trauma..." />
+              <div class="note">Needs: uppercase, lowercase, number, emoji, Roman numeral (I,V,X), and 1 special
+                emotional condition.</div>
+            </div>
+            <div class="small">
+              <label>Confirm Password</label>
+              <input id="confirm" type="password" placeholder="You may type in 3s..." disabled />
+              <div class="note">This field unlocks only after 3s delay when focused (because why not).</div>
+            </div>
+          </div>
+
+          <!-- Gender -->
+          <div>
+            <label>Gender / Identity (choose something)</label>
+            <select id="gender" size="5">
+              <!-- many nonsense options -->
+            </select>
+            <div class="note">This list auto-scrolls & contains 200 silly options.</div>
+          </div>
+
+          <!-- DOB -->
+          <div class="row">
+            <div>
+              <label>Day</label>
+              <select id="day"></select>
+            </div>
+            <div>
+              <label>Month</label>
+              <select id="month"></select>
+            </div>
+            <div>
+              <label>Year</label>
+              <select id="year"></select>
+            </div>
+          </div>
+
+          <!-- Terms -->
+          <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
+            <div style="position:relative">
+              <input id="agree" type="checkbox" />
+              <label for="agree" style="margin-left:8px">I agree to the Terms (maybe)</label>
+              <div class="terms" style="position:absolute;left:0;top:40px;width:360px">TERMS: By using this website you
+                agree that we might, at times, be intentionally unhelpful, sarcastic, or mildly inconvenient. Our
+                liability is imaginary. See: 0.3px fine print. (This text intentionally illegible.)</div>
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <div style="display:flex;align-items:center;gap:12px;margin-top:12px">
+            <button type="button" id="submitBtn" class="catchable">SIGN ME UP (MAYBE?)</button>
+            <div class="note">Or don't. The button moves. <br> Catch it if you can.</div>
+          </div>
+        </form>
+
+        <!-- random toasts / errors container -->
+        <div id="toast" class="toast"></div>
+      </div>
+
+    </div>
+
+    <!-- Confetti layer  -->
+    <div class="confetti" id="confetti"></div>
+
+    <!-- Floating popup -->
+    <div class="popup" id="popup">
+      <div style="font-weight:800;margin-bottom:6px">Need help?</div>
+      <div style="font-size:13px">You have been on this page for <span id="timeOn">00:00</span> — are you struggling?
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button id="mockSupport" style="flex:1;padding:8px;border-radius:8px;border:none;background:var(--gold)">Yes,
+          I'm lost</button>
+        <button id="nope" style="flex:1;padding:8px;border-radius:8px;border:none;background:#f3f4f6">Nope</button>
+      </div>
+    </div>
+
+    <!-- fake chat bubble -->
+    <div class="chat-bubble">Live Support (doesn't Exist)</div>
+
+    <!-- small footer -->
+    <div style="margin-top:18px;text-align:center;color:#9ca3af;font-size:12px">Designed with love and zero usability 💖
+    </div>
+  </div>
+
+  <script>
+    /* ====== KAOS BEHAVIORS (JS) ====== */
+
+    /* Utilities */
+    const $ = id => document.getElementById(id);
+    const toast = (msg, ms = 1800) => {
+      const t = $('toast'); t.textContent = msg; t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), ms);
+    }
+
+    /* 1) Name field clears itself every 5s */
+    const nameInput = $('name');
+    setInterval(() => {
+      if (nameInput.value.trim().length > 0) {
+        nameInput.value = '';
+        toast('Name field decided to start over. Try again.');
+      }
+    }, 5000 + Math.floor(Math.random() * 4000)); // jittered
+
+    /* 2) Email validation: uppercase only + at least 3 emojis */
+    const emailInput = $('email');
+    function countEmojis(s) {
+      // crude emoji matcher
+      const emojiRegex = /(\p{Extended_Pictographic}|\uFE0F)/gu;
+      const matches = s.match(emojiRegex);
+      return matches ? matches.length : 0;
+    }
+    emailInput.addEventListener('input', () => {
+      const v = emailInput.value;
+      // force uppercase suggestion
+      if (v !== v.toUpperCase()) {
+        // do not forcibly transform, but display toast
+        // intentionally annoying: reject lowercase characters visually
+        emailInput.style.borderColor = '#ff6b6b';
+      } else {
+        emailInput.style.borderColor = '';
+      }
+    });
+
+    /* 3) Password validator (ridiculous) */
+    const pwd = $('password');
+    const confirm = $('confirm');
+    pwd.addEventListener('input', () => {
+      const v = pwd.value;
+      let errs = [];
+      if (!/[A-Z]/.test(v)) errs.push('uppercase');
+      if (!/[a-z]/.test(v)) errs.push('lowercase');
+      if (!/[0-9]/.test(v)) errs.push('number');
+      if (!/[IVX]/.test(v)) errs.push('Roman numeral (I,V,X)');
+      if (countEmojis(v) < 1) errs.push('emoji');
+      if (v.length < 10) errs.push('more feelings (>=10 chars)');
+      if (errs.length > 0) {
+        pwd.style.borderColor = '#ff6b6b';
+        pwd.title = 'Missing: ' + errs.join(', ');
+      } else {
+        pwd.style.borderColor = '';
+        pwd.title = 'Strong enough to haunt your dreams.';
+      }
+      // show password in giant letters (intentional)
+      if (v.length > 0) {
+        pwd.type = 'text';
+        pwd.style.fontSize = '22px';
+      } else {
+        pwd.type = 'password';
+        pwd.style.fontSize = '';
+      }
+    });
+
+    /* 4) Confirm password delay: enable after 3s when focused */
+    confirm.addEventListener('focus', () => {
+      confirm.disabled = true;
+      setTimeout(() => confirm.disabled = false, 3000);
+    });
+
+    /* 5) Gender select: populate 200 options & autoscroll */
+    const gender = $('gender');
+    const silly = ["Chaotic Neutral", "Eldritch Mist", "Left-Handed Pixel", "Nonconforming Blob", "Pigeon Person", "Quantum Femme", "Neutral-ish", "Binary-ish", "Sprite", "Glitter Ghost", "Pixel Queen", "Retro User"];
+    for (let i = 0; i < 200; i++) {
+      const opt = document.createElement('option');
+      opt.value = 'option' + i;
+      opt.textContent = silly[i % silly.length] + (i > silly.length ? ' ' + i : '');
+      gender.appendChild(opt);
+    }
+    let gScroll = 0;
+    setInterval(() => {
+      gScroll += 1;
+      gender.scrollTop = (gScroll * 14) % (gender.scrollHeight || 1);
+    }, 900);
+
+    /* 6) DOB day/month/year (year reversed 3022 -> 1800) */
+    const day = $('day'), month = $('month'), year = $('year');
+    for (let d = 1; d <= 31; d++) { const o = document.createElement('option'); o.value = d; o.textContent = d; day.appendChild(o) }
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    months.forEach((m, i) => { const o = document.createElement('option'); o.value = i + 1; o.textContent = m; month.appendChild(o) })
+    for (let y = 3022; y >= 1800; y--) { const o = document.createElement('option'); o.value = y; o.textContent = y; year.appendChild(o) }
+
+    /* 7) Moving checkbox: moves slightly when cursor approaches */
+    const agree = $('agree');
+    agree.addEventListener('mouseover', () => {
+      const offsetX = (Math.random() * 40) - 20;
+      const offsetY = (Math.random() * 12) - 6;
+      agree.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+      setTimeout(() => agree.style.transform = '', 900);
+    });
+
+    /* 8) Submit button moves away from cursor */
+    const submit = $('submitBtn');
+    let chasing = false;
+    submit.addEventListener('mousemove', (e) => {
+      // move the button away a bit randomly
+      const rect = submit.getBoundingClientRect();
+      const dx = (Math.random() * 200) - 100;
+      const dy = (Math.random() * 80) - 40;
+      submit.style.transform = `translate(${dx}px, ${dy}px)`;
+    });
+    submit.addEventListener('click', () => {
+      // sometimes decide not to sign you up
+      if (Math.random() < 0.6) {
+        toast('Error 999: We don\'t feel like signing you up right now.');
+        // clear fields
+        document.querySelectorAll('input').forEach(i => i.value = '');
+        // spawn confetti and insult
+        spawnConfetti();
+        setTimeout(() => {
+          toast('Try again later. Or don\'t.');
+        }, 1800);
+      } else {
+        // success path (rare)
+        toast('You caught it! Submitting...');
+        setTimeout(() => {
+          alert('Signed up! Welcome to KAOS. (This is probably a bug.)');
+        }, 900);
+      }
+    });
+
+    /* 9) Random validation popups/messages placed 'randomly' */
+    function randomInsult() {
+      const list = ["Try harder.", "Not even close.", "My 3-year-old cousin can type better.", "I don't think you understand how forms work."];
+      const msg = list[Math.floor(Math.random() * list.length)];
+      const div = document.createElement('div'); div.textContent = msg;
+      div.style.position = 'absolute'; div.style.left = (Math.random() * 70 + 10) + '%'; div.style.top = (Math.random() * 70 + 10) + '%';
+      div.style.background = '#fff7ed'; div.style.border = '2px solid #ffd6e6'; div.style.padding = '6px 8px'; div.style.borderRadius = '8px'; div.style.boxShadow = '0 8px 30px rgba(0,0,0,0.06)';
+      document.body.appendChild(div);
+      setTimeout(() => div.remove(), 3000 + Math.random() * 3000);
+    }
+    setInterval(randomInsult, 6000 + Math.random() * 6000);
+
+    /* 10) Floating popup timer */
+    let start = Date.now();
+    setInterval(() => {
+      const s = Math.floor((Date.now() - start) / 1000);
+      const mm = String(Math.floor(s / 60)).padStart(2, '0');
+      const ss = String(s % 60).padStart(2, '0');
+      $('timeOn').textContent = `${mm}:${ss}`;
+    }, 1000);
+    /* mockSupport button leads to an unhelpful modal */
+    $('mockSupport').addEventListener('click', () => {
+      toast('Support: Sorry, we are busy with chaos. Try chanting KAOS thrice.');
+    });
+
+    /* 11) Confetti generator (random colors) */
+    function spawnConfetti() {
+      const conf = $('confetti');
+      conf.innerHTML = '';
+      const colors = ['#ffd1e8', '#ffefb6', '#bff5d0', '#dfe7ff', '#ffd6e6'];
+      for (let i = 0; i < 30; i++) {
+        const el = document.createElement('i');
+        el.style.left = (Math.random() * 100) + '%';
+        el.style.top = (Math.random() * 20 - 10) + '%';
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.transform = `rotate(${Math.random() * 360}deg)`;
+        el.style.animationDelay = (Math.random() * 0.6) + 's';
+        conf.appendChild(el);
+      }
+      // let them go
+      setTimeout(() => conf.innerHTML = '', 3500);
+    }
+
+    /* 12) Auto-play sparkly sound (attempt, may be blocked) */
+    const sparkle = new Audio();
+    sparkle.src = "data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAAAA..."; // tiny placeholder base64 (empty) - browsers ignore
+    // try to play on hover over form
+    document.querySelector('.form-wrap').addEventListener('mouseover', () => {
+      try { sparkle.play().catch(() => { }); } catch (e) { }
+    });
+
+    /* 13) Email emoji enforcement on submit simulation: check unrealistic rules (and intentionally fail) */
+    function countEmojiChars(s) {
+      const re = /(\p{Extended_Pictographic}|\uFE0F)/gu;
+      const m = s.match(re);
+      return m ? m.length : 0;
+    }
+
+    /* 14) Final 'onbeforeunload' encouraging chaos */
+    window.addEventListener('beforeunload', (e) => {
+      e.preventDefault();
+      e.returnValue = "Are you leaving? The form misses you!";
+    });
+
+    /* Accessibility note: intentionally absent */
+  </script>
